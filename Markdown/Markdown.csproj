@@ -47,8 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomNodeType.cs" />
+    <Compile Include="DomTree.cs" />
+    <Compile Include="DomTreeFiller.cs" />
     <Compile Include="Md.cs" />
+    <Compile Include="Md_ShouldRender.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

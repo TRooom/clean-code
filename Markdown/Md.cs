@@ -1,17 +1,28 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Markdown
 {
-	public class Md
-	{
-		public string RenderToHtml(string markdown)
-		{
-			return markdown; //TODO
-		}
-	}
+    public class Md
+    {
+        public string RenderToHtml(string markdown)
+        {
+            return markdown; //TODO
+        }
 
-	[TestFixture]
-	public class Md_ShouldRender
-	{
-	}
+        private void ProcessText(Token markdown)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessEscaping(Token markdown)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessUnderscores(Token markdown)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
