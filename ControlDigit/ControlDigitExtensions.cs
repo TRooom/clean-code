@@ -16,7 +16,6 @@ namespace ControlDigit
 				sum += factor * digit;
 				factor = 4 - factor;
 				number /= 10;
-
 			}
 			while (number > 0);
 
@@ -28,8 +27,11 @@ namespace ControlDigit
 
 		public static int ControlDigit2(this long number)
 		{
-			throw new NotImplementedException();
+			
 		}
+
+
+          
 	}
 
 	[TestFixture]
@@ -69,7 +71,7 @@ namespace ControlDigit
 			Console.WriteLine("Old " + sw.Elapsed);
 			sw.Restart();
 			for (int i = 0; i < count; i++)
-				12345678L.ControlDigit2();
+				12345678L.Co q
 			Console.WriteLine("New " + sw.Elapsed);
 		}
 	}
