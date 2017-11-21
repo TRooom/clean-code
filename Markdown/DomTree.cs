@@ -1,27 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace Markdown
 {
     internal class DomTree
     {
-        private DomTree parent;
+        private readonly DomTree parent;
 
-        private string text;
+        private DomTree working;
 
-        private List<DomTree> childrens;
+        private int currentChildren;
 
-        private readonly DomNodeType type;
+        private StringBuilder text;
+
+        private readonly List<DomTree> childrens;
+
+        private readonly ITag type;
+
+        private bool isClosed;
+
+        public DomTree()
+        {
+            childrens = new List<DomTree>();
+            text = new StringBuilder();
+            currentChildren = 0;
+            working = this;
+        }
+
+        public DomTree(DomTree parent, ITag type = null)
+        {
+            childrens = new List<DomTree>();
+            text = new StringBuilder();
+            currentChildren = 0;
+            this.type = type;
+            this.parent = parent;
+        }
+
+        public void AddText(string text)
+        {
+            if (working.childrens.Count == working.currentChildren)
+                working.childrens.Add(new DomTree(working));
+            working.childrens[working.currentChildren].text.Append(text);
+        }
+
+        public void AddNestedTag(ITag type)
+        {
+            if (working.childrens.Count > working.currentChildren)
+                working.currentChildren++;
+            var nested = new DomTree(working, type);
+            working.childrens.Add(nested);
+            working = nested;
+        }
+
+        public void CloseTag()
+        {
+            working.isClosed = true;
+            working = working.parent;
+            working.currentChildren++;
+        }
+
+        public ITag GetCurrentOpenTag() => working.type;
 
         public string ToHtml()
         {
-            throw new NotImplementedException();
+            var currentResult = new StringBuilder();
+            if (childrens.Count == 0)
+                return text.ToString();
+            foreach (var children in childrens)
+                currentResult.Append(children.ToHtml());
+            if (type != null && isClosed)
+                return $"<{type.HtmlTag}>{currentResult}</{type.HtmlTag}>";
+            return type != null ? $"{type.MarkdownTag}{currentResult}" : currentResult.ToString();
         }
 
-        private string ToHtml(StringBuilder result)
-        {
-            throw new NotImplementedException();
-        }
+        public override string ToString() =>
+            type?.HtmlTag.ToUpper() ?? text.ToString();
     }
 }
