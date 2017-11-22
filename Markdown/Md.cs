@@ -8,7 +8,7 @@ namespace Markdown
 {
     public class Md
     {
-        private DomTree tree;
+        private readonly DomTree tree;
 
         public Md()
         {
@@ -19,7 +19,7 @@ namespace Markdown
         {
             var token = new Token(markdown);
             ProcessText(token);
-            return tree.ToHtml(); //TODO
+            return tree.ToHtml();
         }
 
         private void ProcessText(Token markdown)
@@ -78,17 +78,16 @@ namespace Markdown
                    && !string.IsNullOrWhiteSpace(markdown.SeekNext());
         }
 
-        private bool IsSelectionEnd(Token markdowm)
+        private bool IsSelectionEnd(Token markdown)
         {
-            var previous = markdowm.SeekPrevious();
+            var previous = markdown.SeekPrevious();
             var currentTag = tree.GetCurrentOpenTag();
             if (currentTag == null)
                 return false;
-            var v1 = !string.IsNullOrWhiteSpace(previous);
-            var v2 = markdowm.IsSubstr(markdowm.Pointer, currentTag.MarkdownTag);
-            var v3 = string.IsNullOrWhiteSpace(
-                markdowm.TryGetSymbol(markdowm.Pointer + currentTag.MarkdownTag.Length));
-            return v1 && v2 && v3;
+            return !string.IsNullOrWhiteSpace(previous)
+                   && markdown.IsSubstr(markdown.Pointer, currentTag.MarkdownTag)
+                   && string.IsNullOrWhiteSpace(
+                       markdown.TryGetSymbol(markdown.Pointer + currentTag.MarkdownTag.Length));
         }
     }
 }

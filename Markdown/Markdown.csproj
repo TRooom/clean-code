@@ -55,13 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITag.cs" />
+    <Compile Include="Tags\ITag.cs" />
     <Compile Include="DomTree.cs" />
-    <Compile Include="Em.cs" />
+    <Compile Include="Tags\Em.cs" />
     <Compile Include="Md.cs" />
     <Compile Include="Md_ShouldRender.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Strong.cs" />
+    <Compile Include="Tags\Strong.cs" />
     <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>

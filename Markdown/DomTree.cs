@@ -9,7 +9,7 @@ namespace Markdown
     {
         private readonly DomTree parent;
 
-        private DomTree working;
+        private DomTree workingTag;
 
         private int currentChildren;
 
@@ -26,7 +26,7 @@ namespace Markdown
             childrens = new List<DomTree>();
             text = new StringBuilder();
             currentChildren = 0;
-            working = this;
+            workingTag = this;
         }
 
         public DomTree(DomTree parent, ITag type = null)
@@ -40,28 +40,28 @@ namespace Markdown
 
         public void AddText(string text)
         {
-            if (working.childrens.Count == working.currentChildren)
-                working.childrens.Add(new DomTree(working));
-            working.childrens[working.currentChildren].text.Append(text);
+            if (workingTag.childrens.Count == workingTag.currentChildren)
+                workingTag.childrens.Add(new DomTree(workingTag));
+            workingTag.childrens[workingTag.currentChildren].text.Append(text);
         }
 
         public void AddNestedTag(ITag type)
         {
-            if (working.childrens.Count > working.currentChildren)
-                working.currentChildren++;
-            var nested = new DomTree(working, type);
-            working.childrens.Add(nested);
-            working = nested;
+            if (workingTag.childrens.Count > workingTag.currentChildren)
+                workingTag.currentChildren++;
+            var nested = new DomTree(workingTag, type);
+            workingTag.childrens.Add(nested);
+            workingTag = nested;
         }
 
         public void CloseTag()
         {
-            working.isClosed = true;
-            working = working.parent;
-            working.currentChildren++;
+            workingTag.isClosed = true;
+            workingTag = workingTag.parent;
+            workingTag.currentChildren++;
         }
 
-        public ITag GetCurrentOpenTag() => working.type;
+        public ITag GetCurrentOpenTag() => workingTag.type;
 
         public string ToHtml()
         {
@@ -74,8 +74,5 @@ namespace Markdown
                 return $"<{type.HtmlTag}>{currentResult}</{type.HtmlTag}>";
             return type != null ? $"{type.MarkdownTag}{currentResult}" : currentResult.ToString();
         }
-
-        public override string ToString() =>
-            type?.HtmlTag.ToUpper() ?? text.ToString();
     }
 }
