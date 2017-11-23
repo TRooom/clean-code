@@ -15,31 +15,40 @@ namespace Markdown
         }
 
         public string TryGetCurrentSymbol() =>
-            Pointer < 0 || Pointer >= rawString.Length ? null : rawString[Pointer].ToString();
+            IsValidIndex(Pointer) ? null : rawString[Pointer].ToString();
 
         public string Next()
         {
-            Pointer++;
-            if (Pointer < rawString.Length) return rawString[Pointer].ToString();
+            if (IsValidIndex(++Pointer))
+                return rawString[Pointer].ToString();
             IsFinished = true;
             return null;
         }
 
-        public void MovePointer(int count) => Pointer += count;
+        public void MovePointer(int count)
+        {
+            if (!IsValidIndex(Pointer + count))
+                throw new IndexOutOfRangeException("Pointer moved out of string bounds");
+            Pointer += count;
+        }
 
         public string SeekNext() =>
-            Pointer + 1 >= rawString.Length ? null : rawString[Pointer + 1].ToString();
+            IsValidIndex(Pointer + 1) ? rawString[Pointer + 1].ToString() : null;
 
         public string SeekPrevious() =>
-            Pointer - 1 < 0 ? null : rawString[Pointer - 1].ToString();
+            IsValidIndex(Pointer - 1) ? rawString[Pointer - 1].ToString() : null;
 
-        public string TryGetSymbol(int index) => 
-            index >= rawString.Length || index < 0 ? null : rawString[index].ToString();
+        public string TryGetSymbol(int index) =>
+            IsValidIndex(index) ? rawString[index].ToString() : null;
 
-        public bool IsSubstr(int start, string substr)
+        public bool IsStartsFrom(int start, string substr)
         {
-                return start + substr.Length <= rawString.Length 
-                && rawString.Substring(start, substr.Length) == substr;
+            return IsValidIndex(start) &&
+                   IsValidIndex(start + substr.Length - 1)
+                   && rawString.Substring(start).StartsWith(substr);
         }
+
+        private bool IsValidIndex(int index) =>
+            index >= 0 && index < rawString.Length;
     }
 }

@@ -85,7 +85,7 @@ namespace Markdown
             if (currentTag == null)
                 return false;
             return !string.IsNullOrWhiteSpace(previous)
-                   && markdown.IsSubstr(markdown.Pointer, currentTag.MarkdownTag)
+                   && markdown.IsStartsFrom(markdown.Pointer, currentTag.MarkdownTag)
                    && string.IsNullOrWhiteSpace(
                        markdown.TryGetSymbol(markdown.Pointer + currentTag.MarkdownTag.Length));
         }
